@@ -72,6 +72,47 @@ export function renderSettingsView(settings) {
           <button class="primary-button" type="submit">Aloita harjoitus</button>
         </form>
       </section>
+
+      <section class="panel panel--wide panel--credits">
+        <section class="credits" aria-label="Käytettyjen kuvien lähteet ja tekijätiedot">
+          <h2>Kuvat ja lähdekoodi</h2>
+          <p class="field-note">Sovelluksessa käytettyjen kuvien tekijätiedot ja lisenssit:</p>
+          <ul class="credits-list">
+            <li>
+              <strong>Whole_rest.svg</strong> (kokotauko) - Tekijä: Doodle-doo, Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=3126906" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Half_rest.svg</strong> (puolitauko) - Tekijä: Doodle-doo, Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=3126859" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Crotchet_rest.svg</strong> (neljäsosatauko) - Tekijä: Ecw.technoid.dweeb, Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=12477587" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Eighth_rest.svg</strong> (kahdeksasosatauko) - Tekijä: Marmelad, CC BY-SA 2.5.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=3376683" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Music_ClefG.svg</strong> (G-avain) - Tekijä: Handige Harry, Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=3205665" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Bass_clef.svg</strong> (F-avain) - Tekijä: Tlusťa (oletettu), Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=620274" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+            <li>
+              <strong>Alto_clef.svg</strong> (C-avain) - Tekijä: Tlusťa (oletettu), Public Domain.
+              <a href="https://commons.wikimedia.org/w/index.php?curid=620317" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+            </li>
+          </ul>
+          <p class="field-note">
+            Nuottioppaan lähdekoodi:
+            <a href="https://github.com/draugrist/nuottiopas" target="_blank" rel="noopener noreferrer">github.com/draugrist/nuottiopas</a>
+          </p>
+        </section>
+      </section>
     </main>
   `;
 }

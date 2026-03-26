@@ -1,0 +1,394 @@
+:root {
+    color-scheme: light;
+    --bg: #f3efe6;
+    --surface: #fffaf2;
+    --surface-strong: #fff;
+    --ink: #1f2933;
+    --muted: #5f6c7b;
+    --line: #d8cfc0;
+    --accent: #c84c24;
+    --accent-dark: #8f3215;
+    --ok: #276749;
+    --error: #9b2c2c;
+    --shadow: 0 16px 36px rgba(56, 39, 19, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top left, rgba(200, 76, 36, 0.18), transparent 28%),
+        linear-gradient(180deg, #f7f2e8 0%, var(--bg) 100%);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.shell {
+    min-height: 100vh;
+    padding: 32px 20px;
+}
+
+.shell--practice {
+    padding-block: 20px 32px;
+}
+
+.panel {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px;
+    border: 1px solid rgba(120, 95, 72, 0.16);
+    border-radius: 28px;
+    background: rgba(255, 250, 242, 0.92);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+}
+
+.panel--wide {
+    max-width: 880px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: var(--accent-dark);
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+.lead {
+    max-width: 60ch;
+    color: var(--muted);
+}
+
+.settings-grid,
+.practice-grid,
+.summary-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.settings-grid {
+    margin-top: 28px;
+}
+
+.practice-grid {
+    grid-template-columns: 1fr 1.2fr;
+    align-items: start;
+}
+
+.summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 28px 0;
+}
+
+.field {
+    display: grid;
+    gap: 8px;
+}
+
+.field-group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.field-group legend {
+    padding: 0;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.field-note {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 0.94rem;
+    max-width: 60ch;
+}
+
+.field span {
+    font-weight: 600;
+}
+
+.field--checkbox {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+}
+
+.field--checkbox span {
+    font-weight: 400;
+}
+
+input[type='number'],
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-strong);
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface-strong);
+    cursor: pointer;
+    width: auto;
+}
+
+.radio-option input[type='radio'] {
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.radio-option span {
+    font-weight: 400;
+}
+
+.radio-group--clef {
+    gap: 14px;
+}
+
+.radio-option--clef {
+    min-width: 170px;
+    justify-content: flex-start;
+    padding: 12px 14px;
+}
+
+.clef-preview {
+    width: 26px;
+    height: 52px;
+    object-fit: contain;
+}
+
+.clef-preview--bass {
+    transform: translateY(5px);
+}
+
+.primary-button,
+.secondary-button,
+.choice-button {
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+.primary-button,
+.secondary-button {
+    padding: 14px 18px;
+}
+
+.primary-button {
+    background: var(--accent);
+    color: #fff;
+}
+
+.secondary-button {
+    background: #eadfcd;
+    color: var(--ink);
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.choice-button:hover {
+    transform: translateY(-1px);
+}
+
+.practice-header,
+.actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.status-pill {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #efe4d2;
+    font-weight: 600;
+}
+
+.card,
+.summary-card {
+    padding: 20px;
+    border-radius: 22px;
+    background: var(--surface-strong);
+    border: 1px solid rgba(120, 95, 72, 0.12);
+}
+
+.notation-card {
+    display: grid;
+    gap: 16px;
+    place-items: center;
+}
+
+.notation-card__label {
+    font-weight: 700;
+    color: var(--accent-dark);
+}
+
+.staff {
+    width: min(100%, 420px);
+    height: auto;
+}
+
+.staff__line,
+.staff__ledger {
+    stroke: #3d3d3d;
+    stroke-width: 2;
+}
+
+.staff__ledger {
+    stroke-width: 1.5;
+}
+
+.staff__stem {
+    stroke: #1f2933;
+    stroke-width: 2;
+}
+
+.staff__notehead {
+    fill: #1f2933;
+}
+
+.staff__notehead--open {
+    fill: transparent;
+    stroke: #1f2933;
+    stroke-width: 2;
+}
+
+.staff__flag,
+.staff__rest-stroke {
+    fill: none;
+    stroke: #3d3d3d;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.staff__rest-block,
+.staff__rest-dot {
+    fill: #3d3d3d;
+}
+
+.staff__rest-image {
+    overflow: visible;
+}
+
+.staff__clef-label,
+.staff__accidental {
+    fill: #3d3d3d;
+    font-size: 28px;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.answer-summary {
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+}
+
+.button-group {
+    margin-top: 18px;
+}
+
+.button-group--disabled {
+    opacity: 0.45;
+}
+
+.group-label {
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.choice-button {
+    padding: 10px 12px;
+    border: 2px solid transparent;
+    background: #f3eadb;
+    color: var(--ink);
+}
+
+.choice-button--active {
+    background: #1f2933;
+    color: #fff;
+}
+
+.choice-button--correct {
+    border-color: #1f9d55;
+    box-shadow: 0 0 0 3px rgba(31, 157, 85, 0.28);
+}
+
+.choice-button--active.choice-button--correct {
+    border-color: #5be08c;
+    box-shadow: 0 0 0 3px rgba(91, 224, 140, 0.36);
+}
+
+.feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f5efe4;
+}
+
+.feedback--ok {
+    color: var(--ok);
+    background: rgba(39, 103, 73, 0.12);
+}
+
+.feedback--error {
+    color: var(--error);
+    background: rgba(155, 44, 44, 0.12);
+}
+
+@media (max-width: 860px) {
+
+    .practice-grid,
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .practice-header,
+    .actions-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .radio-option--clef {
+        min-width: 0;
+        width: 100%;
+    }
+}

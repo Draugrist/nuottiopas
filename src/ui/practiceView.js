@@ -178,6 +178,21 @@ export function renderPracticeView(state) {
           </section>
         </div>
       </section>
+
+      <section class="panel panel--wide panel--credits">
+        <section class="credits" aria-label="Näppäimistön käyttöohjeet">
+          <h2>Näppäimistöohjeet</h2>
+          <p class="field-note">Voit vastata myos näppäimistölla klikkauksen sijaan:</p>
+          <ul class="credits-list">
+            <li><strong>C, D, E, F, G, A, H</strong>: valitse nuotin luonnollinen korkeus.</li>
+            <li><strong>B</strong>: valitse B (alennettu H).</li>
+            <li><strong>Nuoli ylös</strong>: lisää ylennys (is).</li>
+            <li><strong>Nuoli alas</strong>: lisää alennus (es).</li>
+            <li><strong>1, 2, 4, 8</strong>: valitse kesto (1, 1/2, 1/4, 1/8).</li>
+            <li><strong>Enter</strong>: tarkista vastaus.</li>
+          </ul>
+        </section>
+      </section>
     </main>
   `;
 }

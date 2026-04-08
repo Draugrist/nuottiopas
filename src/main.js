@@ -11,6 +11,39 @@ import { renderSummaryView } from './ui/summaryView.js';
 const appElement = document.querySelector('#app');
 let feedbackTimeoutId = null;
 
+function decodePitchVariant(value) {
+    if (!value) {
+        return null;
+    }
+
+    const [pitch, accidental] = value.split('|');
+    if (!pitch || !accidental) {
+        return null;
+    }
+
+    return { pitch, accidental };
+}
+
+function canApplyAccidental(pitch, accidental) {
+    if (!pitch) {
+        return false;
+    }
+
+    if (pitch === 'B') {
+        return accidental === 'flat';
+    }
+
+    if (accidental === 'sharp') {
+        return !['E', 'H'].includes(pitch);
+    }
+
+    if (accidental === 'flat') {
+        return !['C', 'F'].includes(pitch);
+    }
+
+    return accidental === 'natural';
+}
+
 function render() {
     const state = getState();
 
@@ -100,24 +133,37 @@ function handleAnswerAction(action, value) {
     const currentAnswer = { ...state.session.answer };
 
     if (action === 'pitch') {
-        currentAnswer.pitch = value;
-        currentAnswer.accidental = value === 'B' ? 'flat' : currentAnswer.accidental;
+        const variant = decodePitchVariant(value);
+        if (!variant) {
+            return;
+        }
+
+        currentAnswer.pitch = variant.pitch;
+        currentAnswer.accidental = variant.accidental;
     }
 
     if (action === 'accidental') {
+        if (!currentAnswer.pitch) {
+            return;
+        }
+
+        const targetPitch = currentAnswer.pitch === 'B' ? 'H' : currentAnswer.pitch;
+        if (!canApplyAccidental(targetPitch, value)) {
+            return;
+        }
+
         currentAnswer.accidental = value;
-        if (currentAnswer.pitch === 'B' && value !== 'flat') {
-            currentAnswer.pitch = 'H';
+
+        if (targetPitch === 'H' && value === 'flat') {
+            currentAnswer.pitch = 'B';
+            currentAnswer.accidental = 'flat';
+        } else {
+            currentAnswer.pitch = targetPitch;
         }
     }
 
     if (action === 'duration') {
         currentAnswer.duration = Number(value);
-    }
-
-    if (action === 'special-b') {
-        currentAnswer.pitch = 'B';
-        currentAnswer.accidental = 'flat';
     }
 
     setAnswer(currentAnswer);
@@ -156,13 +202,13 @@ function handlePracticeKeydown(event) {
 
     if (pitchKeys.includes(key)) {
         event.preventDefault();
-        handleAnswerAction('pitch', key.toUpperCase());
+        handleAnswerAction('pitch', `${key.toUpperCase()}|natural`);
         return;
     }
 
     if (key === 'b') {
         event.preventDefault();
-        handleAnswerAction('special-b', 'B');
+        handleAnswerAction('pitch', 'B|flat');
         return;
     }
 

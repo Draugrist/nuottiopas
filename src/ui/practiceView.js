@@ -1,23 +1,53 @@
 import { formatTaskLabel, renderNotation } from './notationRenderer.js';
 
+const PITCH_VARIANTS = [
+  { label: 'C', pitch: 'C', accidental: 'natural' },
+  { label: 'Cis', pitch: 'C', accidental: 'sharp' },
+  { label: 'D', pitch: 'D', accidental: 'natural' },
+  { label: 'Des', pitch: 'D', accidental: 'flat' },
+  { label: 'Dis', pitch: 'D', accidental: 'sharp' },
+  { label: 'E', pitch: 'E', accidental: 'natural' },
+  { label: 'Es', pitch: 'E', accidental: 'flat' },
+  { label: 'F', pitch: 'F', accidental: 'natural' },
+  { label: 'Fis', pitch: 'F', accidental: 'sharp' },
+  { label: 'G', pitch: 'G', accidental: 'natural' },
+  { label: 'Ges', pitch: 'G', accidental: 'flat' },
+  { label: 'Gis', pitch: 'G', accidental: 'sharp' },
+  { label: 'A', pitch: 'A', accidental: 'natural' },
+  { label: 'As', pitch: 'A', accidental: 'flat' },
+  { label: 'Ais', pitch: 'A', accidental: 'sharp' },
+  { label: 'H', pitch: 'H', accidental: 'natural' },
+  { label: 'B', pitch: 'B', accidental: 'flat' }
+];
+
+function encodePitchVariant(variant) {
+  return `${variant.pitch}|${variant.accidental}`;
+}
+
+function decodePitchVariant(value) {
+  if (!value) {
+    return null;
+  }
+
+  const [pitch, accidental] = value.split('|');
+  if (!pitch || !accidental) {
+    return null;
+  }
+
+  return { pitch, accidental };
+}
+
 function renderCountdown(state) {
   return `<p class="status-pill">Tehtävä ${state.session.completedTasks + 1} / ${state.session.limit}</p>`;
 }
 
-function isButtonSelected(group, value, answer) {
-  if (group === 'pitch') {
-    return answer.pitch === value;
+function isPitchVariantSelected(encodedValue, answer) {
+  const variant = decodePitchVariant(encodedValue);
+  if (!variant) {
+    return false;
   }
 
-  if (group === 'duration') {
-    return answer.duration === value;
-  }
-
-  if (group === 'accidental') {
-    return answer.accidental === value;
-  }
-
-  return false;
+  return answer.pitch === variant.pitch && answer.accidental === variant.accidental;
 }
 
 function isButtonCorrect(group, value, state) {
@@ -37,14 +67,16 @@ function isButtonCorrect(group, value, state) {
   }
 
   if (group === 'pitch') {
+    const variant = decodePitchVariant(value);
+    if (!variant) {
+      return false;
+    }
+
     const expectedPitch = correctTask.accidental === 'flat' && correctTask.note.letter === 'H'
       ? 'B'
       : correctTask.note.letter;
-    return value === expectedPitch;
-  }
 
-  if (group === 'accidental') {
-    return value === correctTask.accidental;
+    return variant.pitch === expectedPitch && variant.accidental === correctTask.accidental;
   }
 
   return false;
@@ -94,33 +126,26 @@ export function renderPracticeView(state) {
             <div class="button-group ${task.type === 'rest' ? 'button-group--disabled' : ''}">
               <p class="group-label">Korkeus</p>
               <div class="button-row">
-                ${renderButton('C', 'pitch', 'C', isButtonSelected('pitch', 'C', answer), isButtonCorrect('pitch', 'C', state))}
-                ${renderButton('D', 'pitch', 'D', isButtonSelected('pitch', 'D', answer), isButtonCorrect('pitch', 'D', state))}
-                ${renderButton('E', 'pitch', 'E', isButtonSelected('pitch', 'E', answer), isButtonCorrect('pitch', 'E', state))}
-                ${renderButton('F', 'pitch', 'F', isButtonSelected('pitch', 'F', answer), isButtonCorrect('pitch', 'F', state))}
-                ${renderButton('G', 'pitch', 'G', isButtonSelected('pitch', 'G', answer), isButtonCorrect('pitch', 'G', state))}
-                ${renderButton('A', 'pitch', 'A', isButtonSelected('pitch', 'A', answer), isButtonCorrect('pitch', 'A', state))}
-                ${renderButton('H', 'pitch', 'H', isButtonSelected('pitch', 'H', answer), isButtonCorrect('pitch', 'H', state))}
-                ${renderButton('B', 'special-b', 'B', answer.pitch === 'B', isButtonCorrect('pitch', 'B', state))}
-              </div>
-            </div>
-
-            <div class="button-group ${task.type === 'rest' ? 'button-group--disabled' : ''}">
-              <p class="group-label">Etumerkki</p>
-              <div class="button-row">
-                ${renderButton('ei etumerkkia', 'accidental', 'natural', isButtonSelected('accidental', 'natural', answer), isButtonCorrect('accidental', 'natural', state))}
-                ${renderButton('ylennys', 'accidental', 'sharp', isButtonSelected('accidental', 'sharp', answer), isButtonCorrect('accidental', 'sharp', state))}
-                ${renderButton('alennus', 'accidental', 'flat', isButtonSelected('accidental', 'flat', answer), isButtonCorrect('accidental', 'flat', state))}
+                ${PITCH_VARIANTS.map((variant) => {
+    const encodedValue = encodePitchVariant(variant);
+    return renderButton(
+      variant.label,
+      'pitch',
+      encodedValue,
+      isPitchVariantSelected(encodedValue, answer),
+      isButtonCorrect('pitch', encodedValue, state)
+    );
+  }).join('')}
               </div>
             </div>
 
             <div class="button-group">
               <p class="group-label">Kesto</p>
               <div class="button-row">
-                ${renderButton('1', 'duration', '1', isButtonSelected('duration', 1, answer), isButtonCorrect('duration', '1', state))}
-                ${renderButton('1/2', 'duration', '2', isButtonSelected('duration', 2, answer), isButtonCorrect('duration', '2', state))}
-                ${renderButton('1/4', 'duration', '4', isButtonSelected('duration', 4, answer), isButtonCorrect('duration', '4', state))}
-                ${renderButton('1/8', 'duration', '8', isButtonSelected('duration', 8, answer), isButtonCorrect('duration', '8', state))}
+                ${renderButton('1', 'duration', '1', answer.duration === 1, isButtonCorrect('duration', '1', state))}
+                ${renderButton('1/2', 'duration', '2', answer.duration === 2, isButtonCorrect('duration', '2', state))}
+                ${renderButton('1/4', 'duration', '4', answer.duration === 4, isButtonCorrect('duration', '4', state))}
+                ${renderButton('1/8', 'duration', '8', answer.duration === 8, isButtonCorrect('duration', '8', state))}
               </div>
             </div>
 

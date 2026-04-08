@@ -18,13 +18,29 @@ const FLAT_NAMES = {
 
 const NOTE_X_OFFSET = 30;
 const NOTEHEAD_ROTATION_DEG = -20;
-const STEM_START_Y_OFFSET = 1;
+const STEM_START_Y_OFFSET_UP = 1;
+const STEM_START_Y_OFFSET_DOWN = -3;
+const EIGHTH_NOTE_IMAGE = {
+    width: 93,
+    height: 93,
+    up: {
+        path: '/images/8thNote.svg',
+        noteheadCenterX: 38,
+        noteheadCenterY: 81
+    },
+    down: {
+        path: '/images/8thNoteUpsideDown.svg',
+        noteheadCenterX: 38,
+        noteheadCenterY: 12
+    }
+};
 
-function getStemAnchorPoint(cx, cy, rx) {
+function getStemAnchorPoint(cx, cy, rx, stemDown) {
     const angle = (NOTEHEAD_ROTATION_DEG * Math.PI) / 180;
+    const direction = stemDown ? -1 : 1;
     return {
-        x: cx + rx * Math.cos(angle),
-        y: cy + rx * Math.sin(angle) + STEM_START_Y_OFFSET
+        x: cx + direction * rx * Math.cos(angle),
+        y: cy + direction * rx * Math.sin(angle) + (stemDown ? STEM_START_Y_OFFSET_DOWN : STEM_START_Y_OFFSET_UP)
     };
 }
 
@@ -101,26 +117,29 @@ function renderRestNotation(duration) {
     `;
 }
 
-function renderNoteShape(duration, y) {
+function renderNoteShape(duration, y, position) {
     const noteheadClass = duration <= 2 ? 'staff__notehead staff__notehead--open' : 'staff__notehead';
     const noteheadCenterX = 132 + NOTE_X_OFFSET;
     const noteheadRx = 18;
     const notehead = `<ellipse cx="${noteheadCenterX}" cy="${y}" rx="${noteheadRx}" ry="12" transform="rotate(${NOTEHEAD_ROTATION_DEG} ${noteheadCenterX} ${y})" class="${noteheadClass}" />`;
 
+    if (duration === 8) {
+        const stemDown = position <= 4;
+        const imageConfig = stemDown ? EIGHTH_NOTE_IMAGE.down : EIGHTH_NOTE_IMAGE.up;
+        const imageX = noteheadCenterX - imageConfig.noteheadCenterX;
+        const imageY = y - imageConfig.noteheadCenterY;
+
+        return `<image href="${imageConfig.path}" x="${imageX}" y="${imageY}" width="${EIGHTH_NOTE_IMAGE.width}" height="${EIGHTH_NOTE_IMAGE.height}" class="staff__eighth-note-image" />`;
+    }
+
     if (duration === 1) {
         return notehead;
     }
 
-    const stemStart = getStemAnchorPoint(noteheadCenterX, y, noteheadRx);
-    const stemTop = stemStart.y - 60;
-    const stem = `<line x1="${stemStart.x}" y1="${stemStart.y}" x2="${stemStart.x}" y2="${stemTop}" class="staff__stem" />`;
-
-    if (duration === 8) {
-        const flagControlX1 = stemStart.x + 20;
-        const flagControlX2 = stemStart.x + 21;
-        const flag = `<path d="M${stemStart.x} ${stemTop} C${flagControlX1} ${stemTop + 4} ${flagControlX2} ${stemTop + 26} ${stemStart.x} ${stemTop + 32}" class="staff__flag" />`;
-        return `${notehead}${stem}${flag}`;
-    }
+    const stemDown = position <= 4;
+    const stemStart = getStemAnchorPoint(noteheadCenterX, y, noteheadRx, stemDown);
+    const stemEndY = stemDown ? stemStart.y + 60 : stemStart.y - 60;
+    const stem = `<line x1="${stemStart.x}" y1="${stemStart.y}" x2="${stemStart.x}" y2="${stemEndY}" class="staff__stem" />`;
 
     return `${notehead}${stem}`;
 }
@@ -177,8 +196,8 @@ function renderClefSymbol(clef) {
 
 function getClefExtents(clef) {
     const extentsByClef = {
-        treble: { minY: -22, maxY: 208 },
-        bass: { minY: 36, maxY: 142 },
+        treble: { minY: 12, maxY: 168 },
+        bass: { minY: 24, maxY: 148 },
         'alto clef': { minY: 24, maxY: 148 }
     };
 
@@ -198,14 +217,15 @@ function getClefLabel(clef) {
 function getNoteViewBox(task) {
     const y = 40 + task.note.position * 12;
     const hasStem = task.duration !== 1;
+    const stemDown = task.note.position <= 4;
     const noteheadCenterX = 132 + NOTE_X_OFFSET;
     const noteheadRx = 18;
-    const stemStart = hasStem ? getStemAnchorPoint(noteheadCenterX, y, noteheadRx) : { x: noteheadCenterX, y };
-    const stemTop = hasStem ? stemStart.y - 60 : y;
+    const stemStart = hasStem ? getStemAnchorPoint(noteheadCenterX, y, noteheadRx, stemDown) : { x: noteheadCenterX, y };
+    const stemEndY = hasStem ? (stemDown ? stemStart.y + 60 : stemStart.y - 60) : y;
     const clefExtents = getClefExtents(task.clef);
 
-    let minY = Math.min(40, y - 14, stemTop - 8, clefExtents.minY);
-    let maxY = Math.max(136, y + 14, clefExtents.maxY);
+    let minY = Math.min(40, y - 14, stemEndY - 8, clefExtents.minY);
+    let maxY = Math.max(136, y + 14, stemEndY + 8, clefExtents.maxY);
 
     if (task.note.position < 0) {
         minY = Math.min(minY, 40 + task.note.position * 12 - 12);
@@ -229,7 +249,7 @@ export function renderNotation(task) {
     }
 
     const y = 40 + task.note.position * 12;
-    const accidentalSymbol = task.accidental === 'sharp' ? '#' : task.accidental === 'flat' ? 'b' : '';
+    const accidentalSymbol = task.accidental === 'sharp' ? '♯' : task.accidental === 'flat' ? '♭' : '';
     const viewBox = getNoteViewBox(task);
 
     return `
@@ -243,8 +263,8 @@ export function renderNotation(task) {
         <line x1="30" y1="136" x2="230" y2="136" class="staff__line" />
         ${renderClefSymbol(task.clef)}
         ${renderLedgerLines(task.note.position)}
-        ${accidentalSymbol ? `<text x="${96 + NOTE_X_OFFSET}" y="${y + 8}" class="staff__accidental">${accidentalSymbol}</text>` : ''}
-                ${renderNoteShape(task.duration, y)}
+        ${accidentalSymbol ? `<text x="${86 + NOTE_X_OFFSET}" y="${y + 8}" class="staff__accidental">${accidentalSymbol}</text>` : ''}
+        ${renderNoteShape(task.duration, y, task.note.position)}
       </svg>
     </div>
   `;

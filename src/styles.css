@@ -323,13 +323,16 @@ select {
     stroke-width: 2;
 }
 
-.staff__flag,
 .staff__rest-stroke {
     fill: none;
     stroke: #3d3d3d;
     stroke-width: 4;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.staff__flag {
+    fill: #3d3d3d;
 }
 
 .staff__rest-block,
@@ -341,10 +344,15 @@ select {
     overflow: visible;
 }
 
-.staff__clef-label,
-.staff__accidental {
+.staff__clef-label {
     fill: #3d3d3d;
     font-size: 28px;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.staff__accidental {
+    fill: #3d3d3d;
+    font-size: 32.2px;
     font-family: Georgia, 'Times New Roman', serif;
 }
 

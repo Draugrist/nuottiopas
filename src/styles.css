@@ -381,11 +381,31 @@ select {
     gap: 10px;
 }
 
+.pitch-cluster-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pitch-cluster {
+    display: inline-flex;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 12px;
+    background: rgba(234, 223, 205, 0.5);
+}
+
 .choice-button {
     padding: 10px 12px;
     border: 2px solid transparent;
     background: #f3eadb;
     color: var(--ink);
+}
+
+.choice-button--natural {
+    background: #eadfcd;
+    border-color: rgba(31, 41, 51, 0.24);
+    font-weight: 700;
 }
 
 .choice-button--active {

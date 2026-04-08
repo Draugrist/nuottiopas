@@ -1,23 +1,37 @@
 import { formatTaskLabel, renderNotation } from './notationRenderer.js';
 
-const PITCH_VARIANTS = [
-  { label: 'C', pitch: 'C', accidental: 'natural' },
-  { label: 'Cis', pitch: 'C', accidental: 'sharp' },
-  { label: 'D', pitch: 'D', accidental: 'natural' },
-  { label: 'Des', pitch: 'D', accidental: 'flat' },
-  { label: 'Dis', pitch: 'D', accidental: 'sharp' },
-  { label: 'E', pitch: 'E', accidental: 'natural' },
-  { label: 'Es', pitch: 'E', accidental: 'flat' },
-  { label: 'F', pitch: 'F', accidental: 'natural' },
-  { label: 'Fis', pitch: 'F', accidental: 'sharp' },
-  { label: 'G', pitch: 'G', accidental: 'natural' },
-  { label: 'Ges', pitch: 'G', accidental: 'flat' },
-  { label: 'Gis', pitch: 'G', accidental: 'sharp' },
-  { label: 'A', pitch: 'A', accidental: 'natural' },
-  { label: 'As', pitch: 'A', accidental: 'flat' },
-  { label: 'Ais', pitch: 'A', accidental: 'sharp' },
-  { label: 'H', pitch: 'H', accidental: 'natural' },
-  { label: 'B', pitch: 'B', accidental: 'flat' }
+const PITCH_GROUPS = [
+  [
+    { label: 'C', pitch: 'C', accidental: 'natural' },
+    { label: 'Cis', pitch: 'C', accidental: 'sharp' }
+  ],
+  [
+    { label: 'Des', pitch: 'D', accidental: 'flat' },
+    { label: 'D', pitch: 'D', accidental: 'natural' },
+    { label: 'Dis', pitch: 'D', accidental: 'sharp' }
+  ],
+  [
+    { label: 'Es', pitch: 'E', accidental: 'flat' },
+    { label: 'E', pitch: 'E', accidental: 'natural' }
+  ],
+  [
+    { label: 'F', pitch: 'F', accidental: 'natural' },
+    { label: 'Fis', pitch: 'F', accidental: 'sharp' }
+  ],
+  [
+    { label: 'Ges', pitch: 'G', accidental: 'flat' },
+    { label: 'G', pitch: 'G', accidental: 'natural' },
+    { label: 'Gis', pitch: 'G', accidental: 'sharp' }
+  ],
+  [
+    { label: 'As', pitch: 'A', accidental: 'flat' },
+    { label: 'A', pitch: 'A', accidental: 'natural' },
+    { label: 'Ais', pitch: 'A', accidental: 'sharp' }
+  ],
+  [
+    { label: 'B', pitch: 'B', accidental: 'flat' },
+    { label: 'H', pitch: 'H', accidental: 'natural' }
+  ]
 ];
 
 function encodePitchVariant(variant) {
@@ -82,9 +96,9 @@ function isButtonCorrect(group, value, state) {
   return false;
 }
 
-function renderButton(label, action, value, selected, correct) {
+function renderButton(label, action, value, selected, correct, variant = '') {
   return `
-    <button class="choice-button ${selected ? 'choice-button--active' : ''} ${correct ? 'choice-button--correct' : ''}" type="button" data-action="${action}" data-value="${value}">
+    <button class="choice-button ${variant} ${selected ? 'choice-button--active' : ''} ${correct ? 'choice-button--correct' : ''}" type="button" data-action="${action}" data-value="${value}">
       ${label}
     </button>
   `;
@@ -125,17 +139,23 @@ export function renderPracticeView(state) {
           <section class="card">
             <div class="button-group ${task.type === 'rest' ? 'button-group--disabled' : ''}">
               <p class="group-label">Korkeus</p>
-              <div class="button-row">
-                ${PITCH_VARIANTS.map((variant) => {
+              <div class="pitch-cluster-row">
+                ${PITCH_GROUPS.map((group) => `
+                  <div class="pitch-cluster">
+                    ${group.map((variant) => {
     const encodedValue = encodePitchVariant(variant);
+    const buttonVariantClass = variant.accidental === 'natural' ? 'choice-button--natural' : '';
     return renderButton(
       variant.label,
       'pitch',
       encodedValue,
       isPitchVariantSelected(encodedValue, answer),
-      isButtonCorrect('pitch', encodedValue, state)
+      isButtonCorrect('pitch', encodedValue, state),
+      buttonVariantClass
     );
   }).join('')}
+                  </div>
+                `).join('')}
               </div>
             </div>
 

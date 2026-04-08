@@ -99,6 +99,10 @@ export function renderSettingsView(settings) {
               <a href="https://commons.wikimedia.org/w/index.php?curid=2224859" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
             </li>
             <li>
+              <strong>8thNoteUpsideDown.svg</strong> (kahdeksasosanuotti ylösalaisin) - Muokannut Tuomas Piirainen PianistHere:n 8thNote.svg:n pohjalta, CC BY-SA 4.0.
+              <a href="/images/8thNoteUpsideDown.svg">ladattavissa</a>
+            </li>
+            <li>
               <strong>Music_ClefG.svg</strong> (G-avain) - Tekijä: Handige Harry, Public Domain.
               <a href="https://commons.wikimedia.org/w/index.php?curid=3205665" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
             </li>

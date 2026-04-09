@@ -9,6 +9,7 @@ Sovelluksessa on kaksi näkymää: asetusten valinta ja harjoitusnäkymä.
 Nuottiavain
 * G-avain
 * F-avain
+* C-avain
 
 Vaikeustaso
 * Helppo

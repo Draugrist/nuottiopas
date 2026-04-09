@@ -2,6 +2,8 @@
 
 Yksinkertainen musiikkinuottien harjoittelusovellus.
 
+https://nuottiopas.static2.website/
+
 ## Asennus
 
 ```bash

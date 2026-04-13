@@ -15,11 +15,11 @@ export function getState() {
     return state;
 }
 
-export function createEmptyAnswer() {
+export function createEmptyAnswer(settings) {
     return {
         pitch: '',
         accidental: 'natural',
-        duration: 4
+        duration: settings.difficulty === 'easy' ? 4 : null
     };
 }
 
@@ -28,7 +28,7 @@ export function createSession(settings) {
         limit: settings.limitValue,
         completedTasks: 0,
         task: null,
-        answer: createEmptyAnswer(),
+        answer: createEmptyAnswer(settings),
         feedback: null,
         stats: {
             noteTasks: 0,

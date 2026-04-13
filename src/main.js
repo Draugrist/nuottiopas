@@ -68,7 +68,7 @@ function beginSession(settings) {
     const task = createTask(settings);
 
     startSession(settings, session);
-    setSessionTask(task, createEmptyAnswer(), null);
+    setSessionTask(task, createEmptyAnswer(settings), null);
     render();
 }
 
@@ -84,7 +84,7 @@ function nextTask() {
     }
 
     const task = createTask(state.settings, state.session.task);
-    setSessionTask(task, createEmptyAnswer(), null);
+    setSessionTask(task, createEmptyAnswer(state.settings), null);
     render();
 }
 

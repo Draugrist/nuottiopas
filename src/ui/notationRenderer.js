@@ -30,8 +30,18 @@ const EIGHTH_NOTE_IMAGE = {
     },
     down: {
         path: '/images/8thNoteUpsideDown.svg',
-        noteheadCenterX: 38,
+        noteheadCenterX: 48,
         noteheadCenterY: 12
+    }
+};
+const ACCIDENTAL_OFFSET = {
+    'sharp': {
+        x: 85,
+        y: 14
+    },
+    'flat': {
+        x: 78,
+        y: 10
     }
 };
 
@@ -263,7 +273,7 @@ export function renderNotation(task) {
         <line x1="30" y1="136" x2="230" y2="136" class="staff__line" />
         ${renderClefSymbol(task.clef)}
         ${renderLedgerLines(task.note.position)}
-        ${accidentalSymbol ? `<text x="${86 + NOTE_X_OFFSET}" y="${y + 8}" class="staff__accidental">${accidentalSymbol}</text>` : ''}
+        ${accidentalSymbol ? `<text x="${ACCIDENTAL_OFFSET[task.accidental].x + NOTE_X_OFFSET}" y="${y + ACCIDENTAL_OFFSET[task.accidental].y}" class="staff__accidental">${accidentalSymbol}</text>` : ''}
         ${renderNoteShape(task.duration, y, task.note.position)}
       </svg>
     </div>

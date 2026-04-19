@@ -2,7 +2,7 @@
 
 Yksinkertainen musiikkinuottien harjoittelusovellus.
 
-https://nuottiopas.static2.website/
+https://nuottiopas.draugrist.fi/
 
 ## Asennus
 
